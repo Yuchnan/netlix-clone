@@ -1,4 +1,5 @@
 const { ERR, OK } = require("../utils/response")
+const { User } = require("../models/index.model")
 
 const GetFavoriteMovies = async (req, res) => {
     try {
@@ -34,8 +35,9 @@ const RemoveFavoriteMovies = async (req, res) => {
 const SignInToken = async (req, res) => {
     try {
         const { email, token } = req.body
-        const result = { email, token }
-        return OK(res, 200, result, "Sign-in Token Saved")
+        const user = new User({ email, token })
+        await user.save()
+        return OK(res, 200, null, "Sign-in Token Saved")
     } catch (error) {
         return ERR(res, 500, "Error Saving Sign-in Token")
     }
