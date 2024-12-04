@@ -32,9 +32,9 @@ const RemoveFavoriteMovies = async (req, res) => {
         const user = await User.findById(req.user._id)
 
         //validasi
-        const ifMovieExist = user.favoriteMovies.some(movie => movie.id == movieID)
+        const isMovieExist = user.favoriteMovies.some(movie => movie.id == movieID)
 
-        if (!ifMovieExist) return ERR(res, 404, "Movie ID Not Found!")
+        if (!isMovieExist) return ERR(res, 404, "Movie ID Not Found!")
 
         //menyimpan/menimpa list favorite movies yang tidak sama dengan input user
         user.favoriteMovies = user.favoriteMovies.filter(movie => movie.id !== movieID)
@@ -49,14 +49,18 @@ const RemoveFavoriteMovies = async (req, res) => {
 
 const SignInToken = async (req, res) => {
     try {
-        const { email, token } = req.body
+        const { email, password, token } = req.body
         //menggunakan let karena else mengandung keyword *new*
         let user = await User.findOne({ email })
-        if (user) {
-            user.token = token
-        } else {
-            user = new User({ email, token })
-        }
+
+        if (!user) return ERR(res, 400, "User Not Found!")
+
+        const isPasswordOk = await argon2.verify(user.password, password)
+
+        if (!isPasswordOk) return ERR(res, 400, "Wrong Password!")
+
+        user.token = token
+
         await user.save()
         return OK(res, 200, null, "Sign-in Token Saved!")
     } catch (error) {
