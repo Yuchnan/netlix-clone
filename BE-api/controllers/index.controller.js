@@ -1,5 +1,6 @@
 const { ERR, OK } = require("../utils/response")
 const { User } = require("../models/index.model")
+const argon2 = require("argon2")
 
 const GetFavoriteMovies = async (req, res) => {
     return OK(res, 200, req.user, "Get Favorite Movies Success!")
@@ -71,10 +72,29 @@ const SignOutToken = async (req, res) => {
     return OK(res, 204, null, "Sign-out Success!")
 }
 
+const SignUpUser = async (req, res) => {
+    const { email, password } = req.body
+    const hashPass = await argon2.hash(password)
+
+    try {
+        const user = await User.findOne({ email })
+
+        if (user) return ERR(res, 400, "Email Not Available!")
+
+        const addNewUser = new User({ email, password: hashPass })
+        await addNewUser.save()
+        return OK(res, 201, addNewUser._id, "Sign-up Success!")
+    } catch (err) {
+        console.log("error: ", err)
+        return ERR(res, 500, "Sign-up Failed!")
+    }
+}
+
 module.exports = {
     SignInToken,
     SignOutToken,
     GetFavoriteMovies,
     AddFavoriteMovies,
-    RemoveFavoriteMovies
+    RemoveFavoriteMovies,
+    SignUpUser
 }
