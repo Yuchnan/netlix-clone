@@ -27,9 +27,20 @@ const AddFavoriteMovies = async (req, res) => {
 
 const RemoveFavoriteMovies = async (req, res) => {
     try {
-        const { email, token, movieId } = req.body
-        const result = { email, token, movieId }
-        return OK(res, 200, result, "Remove Favorite Movies Success!")
+        const { movieID } = req.body
+        const user = await User.findById(req.user._id)
+
+        //validasi
+        const ifMovieExist = user.favoriteMovies.some(movie => movie.id == movieID)
+
+        if (!ifMovieExist) return ERR(res, 404, "Movie ID Not Found!")
+
+        //menyimpan/menimpa list favorite movies yang tidak sama dengan input user
+        user.favoriteMovies = user.favoriteMovies.filter(movie => movie.id !== movieID)
+
+        await user.save()
+
+        return OK(res, 204, null, "Remove Favorite Movies Success!")
     } catch (error) {
         return ERR(res, 500, "Error Removing Favorite Movies!")
     }
