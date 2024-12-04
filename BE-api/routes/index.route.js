@@ -10,4 +10,7 @@ router.delete("/my-movies", tokenCheck, UserController.RemoveFavoriteMovies)
 //user sign-in token
 router.post("/my-token", UserController.SignInToken)
 
+//user sign-out token
+router.delete("/my-token", tokenCheck, UserController.SignOutToken)
+
 module.exports = router

@@ -49,7 +49,13 @@ const RemoveFavoriteMovies = async (req, res) => {
 const SignInToken = async (req, res) => {
     try {
         const { email, token } = req.body
-        const user = new User({ email, token })
+        //menggunakan let karena else mengandung keyword *new*
+        let user = await User.findOne({ email })
+        if (user) {
+            user.token = token
+        } else {
+            user = new User({ email, token })
+        }
         await user.save()
         return OK(res, 200, null, "Sign-in Token Saved!")
     } catch (error) {
@@ -57,8 +63,17 @@ const SignInToken = async (req, res) => {
     }
 }
 
+const SignOutToken = async (req, res) => {
+    const user = await User.findById(req.user._id)
+    user.token = null
+
+    await user.save()
+    return OK(res, 204, null, "Sign-out Success!")
+}
+
 module.exports = {
     SignInToken,
+    SignOutToken,
     GetFavoriteMovies,
     AddFavoriteMovies,
     RemoveFavoriteMovies
