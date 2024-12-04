@@ -24,3 +24,5 @@ app.use(routes)
 app.listen(PORT, () => {
     console.log("Server API jalan di port " + PORT)
 })
+
+module.exports = app

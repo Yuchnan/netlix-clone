@@ -41,7 +41,7 @@ const RemoveFavoriteMovies = async (req, res) => {
 
         await user.save()
 
-        return OK(res, 204, null, "Remove Favorite Movies Success!")
+        return OK(res, 200, null, "Remove Favorite Movies Success!")
     } catch (error) {
         return ERR(res, 500, "Error Removing Favorite Movies!")
     }
@@ -73,7 +73,7 @@ const SignOutToken = async (req, res) => {
     user.token = null
 
     await user.save()
-    return OK(res, 204, null, "Sign-out Success!")
+    return OK(res, 200, null, "Sign-out Success!")
 }
 
 const SignUpUser = async (req, res) => {
