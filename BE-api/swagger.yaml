@@ -1,0 +1,150 @@
+openapi: 3.1.0
+info:
+  title: Netflix Clone API Project
+  description: Netflix API Express JS MongoDB
+paths:
+  /my-token:
+    post:
+      summary: Add user signin token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: yuchnan@gmail.com
+                password:
+                  type: string
+                  example: qwerty
+                token:
+                  type: string
+                  example: 6969
+      responses:
+        200:
+          description: Sign in token saved
+        400:
+          description: Wrong password
+        500:
+          description: Error saving sign in token
+  /my-movies/{email}/{token}:
+    get:
+      summary: Get user favorite movies
+      parameters:
+        - in: path
+          name: email
+          require: true
+          schema:
+            type: string
+        - in: path
+          name: token
+          require: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Get Favorite Movies Success
+        401:
+          description: Failed to Get Favorite Movies, Unauthorized
+  /my-movies:
+    post:
+      summary: Add user favorite movies to database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: yuchnan@gmail.com
+                token:
+                  type: string
+                  example: 6969
+                data:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: Test123
+                    description:
+                      type: string
+                      example: desc123
+      responses:
+        201:
+          description: Add Favorite Movies Success
+        500:
+          description: Error Adding Favorite Movies
+    delete:
+      summary: Remove user favorite movies from database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: yuchnan@gmail.com
+                token:
+                  type: string
+                  example: 6969
+                movieID:
+                  type: integer
+                  example: 1
+      responses:
+        200:
+          description: Remove Favorite Movies Success
+        404:
+          description: Movie ID Not Found
+        500:
+          description: Error Removing Favorite Movies
+  /my-token:
+    delete:
+      summary: Delete user sign-in token / sign out
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: yuchnan@gmail.com
+                token:
+                  type: string
+                  example: 6969
+      responses:
+        200:
+          description: Sign out success
+  /sign-up:
+    post:
+      summary: Sign up a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: yuchnan@gmail.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        201:
+          description: Sign-up Success
+        400:
+          description: Email Not Available
+        500:
+          description: Sign-up Failed
