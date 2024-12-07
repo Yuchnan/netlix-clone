@@ -6,7 +6,7 @@ const { tokenCheck } = require("../utils/auth")
 router.get("/my-movies/:email/:token", tokenCheck, UserController.GetFavoriteMovies)
 router.post("/my-movies", tokenCheck, UserController.AddFavoriteMovies)
 router.delete("/my-movies", tokenCheck, UserController.RemoveFavoriteMovies)
-router.post("my-movies", tokenCheck, UserController.CheckFavoriteMovies)
+router.post("my-movies/check", tokenCheck, UserController.CheckFavoriteMovies)
 
 //user sign-in token
 router.post("/my-token", UserController.SignInToken)
