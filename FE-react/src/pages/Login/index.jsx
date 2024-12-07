@@ -14,8 +14,7 @@ const Register = () => {
     const navigate = useNavigate()
 
     const [, setToken] = useAtom(tokenAtom)
-    const [, setEmailStorage] = useAtom(emailStorageAtom
-    )
+    const [, setEmailStorage] = useAtom(emailStorageAtom)
     const [email, setEmail] = useAtom(emailAtom)
     const [password, setPassword] = useState(null)
 
@@ -25,8 +24,8 @@ const Register = () => {
             const login = await signInWithEmailAndPassword(auth, email, password)
             if (login) {
                 const firebaseToken = await getIdToken(login.user)
-                setToken(firebaseToken)
                 setEmailStorage(login.user.email)
+                setToken(firebaseToken)
                 navigate("/browse")
             }
         } catch (error) {

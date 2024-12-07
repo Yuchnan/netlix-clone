@@ -1,31 +1,39 @@
 import React, { useState } from 'react'
+import DefaultLayout from '@/components/Layouts/DefaultLayout'
 
+import 'react-toastify/dist/ReactToastify.css';
 import { JUMBOTRON_IMAGE } from '@/constants/listAsset'
 import { GoChevronLeft } from 'react-icons/go'
 import { useNavigate } from 'react-router-dom'
 import { emailAtom } from '@/jotai/atoms'
 import { useAtom } from 'jotai'
 import { auth } from '@/utils/firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import 'react-toastify/dist/ReactToastify.css';
+import { createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 import { ToastContainer, toast } from 'react-toastify';
-import DefaultLayout from '@/components/Layouts/DefaultLayout'
+import { apiInstanceExpress } from '@/utils/apiInstance'
 
 const Register = () => {
     const navigate = useNavigate()
 
     const [email, setEmail] = useAtom(emailAtom)
     const [password, setPassword] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleRegister = async (e) => {
         e.preventDefault()
         try {
+            setIsLoading(true)
             const register = await createUserWithEmailAndPassword(auth, email, password)
             if (register) {
-                toast("REGISTER SUCCESS!")
-                setTimeout(() => {
-                    navigate("/login")
-                }, 2000)
+                await signOut(auth)
+                const addUser = await apiInstanceExpress.post('sign-up', { email, password })
+                if (addUser.status === 201) {
+                    toast("REGISTER SUCCESS!")
+                    setTimeout(() => {
+                        setIsLoading(false)
+                        navigate("/login")
+                    }, 2000)
+                }
             }
         } catch (error) {
             toast(error.message)
@@ -54,7 +62,7 @@ const Register = () => {
                         <input
                             placeholder="Email"
                             type='email'
-                            value={email}
+                            value={email ? email : ""}
                             onChange={(e) => setEmail(e.target.value)}
                             className='w-full p-4 bg-black/50 rounded-md border border-white/50 peer placeholder-transparent'
                         />
@@ -76,7 +84,8 @@ const Register = () => {
                     <div className='flex flex-col gap-4'>
                         <button
                             onClick={handleRegister}
-                            className='bg-red-500 py-3 w-full text-white font-bold rounded-md'
+                            disabled={isLoading}
+                            className='bg-red-500 py-3 w-full text-white font-bold rounded-md disabled:bg-red-300 disabled:'
                         >
                             Sign Up
                         </button>

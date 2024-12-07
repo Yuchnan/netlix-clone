@@ -12,13 +12,13 @@ function Landing() {
   return (
     <>
       <Navbar />
-      <Jumbotron/>
-      <SectionEnjoy/>
-      <SectionDownload/>
-      <SectionWatch/>
-      <SectionProfile/>
-      <SectionFAQ/>
-      <Footer/>
+      <Jumbotron />
+      <SectionEnjoy />
+      <SectionDownload />
+      <SectionWatch />
+      <SectionProfile />
+      <SectionFAQ />
+      <Footer />
     </>
   )
 }
