@@ -5,11 +5,29 @@ import { signOut } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import { useAtom } from 'jotai'
 import { emailStorageAtom, tokenAtom } from '@/jotai/atoms'
+import { apiInstanceExpress } from '@/utils/apiInstance'
 
 const AccountMenu = () => {
     const navigate = useNavigate()
-    const [, setIsToken] = useAtom(tokenAtom)
-    const [, setEmailStorage] = useAtom(emailStorageAtom)
+    const [token, setIsToken] = useAtom(tokenAtom)
+    const [email, setEmailStorage] = useAtom(emailStorageAtom)
+
+    const handleSignOut = async () => {
+        const data = { email, token }
+        // console.log("Data yang dikirim:", data)
+
+        const dbSignOut = await apiInstanceExpress.delete('my-token', {
+            data
+        })
+
+        if (dbSignOut.status === 200) {
+            signOut(auth).then(() => {
+                setIsToken(null)
+                setEmailStorage(null)
+                navigate("/")
+            })
+        }
+    }
 
     return (
         <div className='
@@ -19,15 +37,9 @@ const AccountMenu = () => {
                     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                 </div>
             </div>
-            <button 
-                onClick={() => {
-                    signOut(auth).then(() => {
-                        setIsToken(null)
-                        setEmailStorage(null)
-                        navigate("/")
-                    })
-                }}
-                tabIndex={0} 
+            <button
+                onClick={handleSignOut}
+                tabIndex={0}
                 className='dropdown-content top-10 w-32 bg-black py-1'
             >
                 Sign Out

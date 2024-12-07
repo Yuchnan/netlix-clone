@@ -85,7 +85,7 @@ const Register = () => {
                         <button
                             onClick={handleRegister}
                             disabled={isLoading}
-                            className='bg-red-500 py-3 w-full text-white font-bold rounded-md disabled:bg-red-300 disabled:'
+                            className='bg-red-500 py-3 w-full text-white font-bold rounded-md disabled:bg-red-300 disabled:cursor-wait'
                         >
                             Sign Up
                         </button>
