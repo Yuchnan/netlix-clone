@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
+import DefaultLayout from '@/components/Layouts/DefaultLayout'
 
+import 'react-toastify/dist/ReactToastify.css';
 import { JUMBOTRON_IMAGE } from '@/constants/listAsset'
 import { GoChevronLeft } from 'react-icons/go'
 import { useNavigate } from 'react-router-dom'
@@ -7,8 +9,8 @@ import { emailAtom, emailStorageAtom, tokenAtom } from '@/jotai/atoms'
 import { useAtom } from 'jotai'
 import { signInWithEmailAndPassword, getIdToken } from 'firebase/auth'
 import { auth } from '@/utils/firebase'
-import { toast } from 'react-toastify'
-import DefaultLayout from '@/components/Layouts/DefaultLayout'
+import { toast, ToastContainer } from 'react-toastify'
+import { apiInstanceExpress } from '@/utils/apiInstance'
 
 const Register = () => {
     const navigate = useNavigate()
@@ -17,24 +19,40 @@ const Register = () => {
     const [, setEmailStorage] = useAtom(emailStorageAtom)
     const [email, setEmail] = useAtom(emailAtom)
     const [password, setPassword] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
+            setIsLoading(true)
+
             const login = await signInWithEmailAndPassword(auth, email, password)
             if (login) {
                 const firebaseToken = await getIdToken(login.user)
-                setEmailStorage(login.user.email)
-                setToken(firebaseToken)
-                navigate("/browse")
+                const addToken = await apiInstanceExpress.post("/my-token", { email, password, token: firebaseToken })
+                if (addToken.status == 200) {
+                    setToken(firebaseToken)
+                    setEmailStorage(login.user.email)
+
+                    setTimeout(() => {
+                        setIsLoading(false)
+                        navigate("/browse")
+                    }, 2000)
+                }
             }
         } catch (error) {
+            setIsLoading(false)
             toast(error.message)
         }
     }
 
     return (
         <DefaultLayout>
+            <ToastContainer position='top-center' theme='dark' autoClose={2000} />
+            <img
+                src={JUMBOTRON_IMAGE}
+                className='w-full h-[100vh] object-cover opacity-70'
+            />
             <img
                 src={JUMBOTRON_IMAGE}
                 className='w-full h-[100vh] object-cover opacity-70'
@@ -53,7 +71,7 @@ const Register = () => {
                         <input
                             placeholder="Email"
                             type='email'
-                            value={email}
+                            value={email ? email : ""}
                             onChange={(e) => setEmail(e.target.value)}
                             className='w-full p-4 bg-black/50 rounded-md border border-white/50 peer placeholder-transparent'
                         />
@@ -75,9 +93,10 @@ const Register = () => {
                     <div className='flex flex-col gap-4'>
                         <button
                             onClick={handleLogin}
-                            className='bg-red-500 py-3 w-full text-white font-bold rounded-md'
+                            disabled={isLoading}
+                            className='bg-red-500 py-3 w-full text-white font-bold rounded-md disabled:bg-red-300 disabled:cursor-wait'
                         >
-                            Sign In
+                            {isLoading ? "Mohon tunggu..." : "Sign In"}
                         </button>
                         <p>Not having an account?
                             <span
