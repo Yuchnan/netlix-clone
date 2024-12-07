@@ -4,6 +4,8 @@ const { ERR } = require("./response")
 const tokenCheck = async (req, res, next) => {
     const email = req.body.email || req.params.email
     const token = req.body.token || req.params.token
+    // console.log("Email dan Token yang diterima:", email, token)
+
 
     if (!email || !token) {
         return ERR(res, 400, "Error, no data provided!")
