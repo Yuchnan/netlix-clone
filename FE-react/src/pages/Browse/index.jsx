@@ -4,6 +4,7 @@ import MovieList from "@mods/BrowsePage/MovieList"
 import Modal from "@mods/BrowsePage/Modal"
 import SearchMovies from "@mods/BrowsePage/SearchMovies"
 
+import { ToastContainer } from "react-toastify"
 import { useAtom } from "jotai"
 import { searchMoviesAtom } from "@/jotai/atoms"
 
@@ -12,6 +13,7 @@ function Browse() {
 
     return (
         <BrowseLayout>
+            <ToastContainer position='top-center' theme='dark' autoClose={2000} />
             {searchQuery ? <SearchMovies /> : (
                 <>
                     <Jumbotron />

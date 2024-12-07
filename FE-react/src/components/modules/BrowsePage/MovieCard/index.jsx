@@ -5,20 +5,44 @@ import Skeleton from './Skeleton'
 import { GoPlay, GoPlus, GoChevronDown } from 'react-icons/go'
 import { motion } from 'framer-motion'
 import { useAtom } from 'jotai'
-import { idMovieAtom, isFetchingAtom, isOpenModalAtom } from '@/jotai/atoms'
+import { emailStorageAtom, idMovieAtom, isFetchingAtom, isOpenModalAtom, tokenAtom } from '@/jotai/atoms'
 import { getVideoUrl } from '@/utils/getVideoUrl'
 import { useNavigate } from 'react-router-dom'
-import { LIST_VIDEO_RECOMMENDATION } from '@/constants/dummyVideo'
+import { apiInstanceExpress } from '@/utils/apiInstance'
+import { toast } from 'react-toastify'
 
 const MovieCard = ({ data, isHover, setIsHover }) => {
     const navigate = useNavigate()
 
-    const [idMovie, setIdMovie] = useAtom(idMovieAtom)
     const [, setIsOpenModal] = useAtom(isOpenModalAtom)
+    const [idMovie, setIdMovie] = useAtom(idMovieAtom)
+    const [emailStorage] = useAtom(emailStorageAtom)
+    const [tokenStorage] = useAtom(tokenAtom)
+
     const [videoUrl, setVideoUrl] = useState(null)
     const [isFetching] = useAtom(isFetchingAtom)
 
     if (isFetching) return <Skeleton />
+
+    const handleAddFavMovie = async () => {
+        if (emailStorage && tokenStorage) {
+            try {
+                const addFavMovie = await apiInstanceExpress.post('my-movies', {
+                    email: emailStorage,
+                    token: tokenStorage,
+                    data: data
+                })
+                if (addFavMovie.status === 201) {
+                    toast(`Berhasil menambahkan ${data.title} ke favorite`)
+                } else {
+                    toast(`Gagal menambahkan ${data.title} ke favorite`)
+                }
+            } catch (error) {
+                console.log(error)
+                toast(`Sorry,${error.message}`)
+            }
+        }
+    }
 
     return (
         <>
@@ -27,7 +51,7 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0, ease: "easeInOut" }}
-                    className='relative shadow-md cursor-pointer transition-all w-full'
+                    className='relative shadow-md transition-all w-full'
                 >
                     <ReactPlayer
                         url={`https://youtube.com/watch?v=${videoUrl}`}
@@ -44,8 +68,11 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
                                 <button onClick={() => navigate("/watch/" + videoUrl)}>
                                     <GoPlay size={32} />
                                 </button>
-                                <button>
-                                    <GoPlus size={32} />
+                                <button
+                                    onClick={handleAddFavMovie}
+                                    className='p-1 hover:text-white transition-all border rounded-full'
+                                >
+                                    <GoPlus size={20} />
                                 </button>
                             </div>
                             <div>
@@ -70,7 +97,7 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
                         setIdMovie(data.id)
                         getVideoUrl({ movie_id: data.id }).then(result => setVideoUrl(result))
                     }}
-                    src={!data.poster_path ? LIST_VIDEO_RECOMMENDATION[0].image : `${import.meta.env.VITE_BASE_URL_TMDB_IMAGE}${data.poster_path}`}
+                    src={`${import.meta.env.VITE_BASE_URL_TMDB_IMAGE}${data.poster_path}`}
                     className='w-full max-h-48 cursor-pointer'
                 />
 
