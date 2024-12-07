@@ -1,15 +1,37 @@
-import React, { useState } from 'react'
+import BrowseLayout from '@/components/Layouts/BrowseLayout'
+import React, { useEffect, useState } from 'react'
 import EachUtils from '@/utils/EachUtils'
 import MovieCard from '@mods/BrowsePage/MovieCard'
 
 import { useAtom } from 'jotai'
-import { idMovieAtom } from '@/jotai/atoms'
-import { LIST_VIDEO_RECOMMENDATION } from '@/constants/dummyVideo'
-import BrowseLayout from '@/components/Layouts/BrowseLayout'
+import { emailStorageAtom, idMovieAtom, tokenAtom } from '@/jotai/atoms'
+import { apiInstanceExpress } from '@/utils/apiInstance'
+import Modal from '@/components/modules/BrowsePage/Modal'
 
 const Favorite = () => {
     const [, setIdMovie] = useAtom(idMovieAtom)
+    const [emailStorage] = useAtom(emailStorageAtom)
+    const [tokenStorage] = useAtom(tokenAtom)
+
     const [isHover, setIsHover] = useState(false)
+    const [movieList, setMovieList] = useState([])
+
+    const getFavMovies = async () => {
+        try {
+            const url = `my-movies/${emailStorage}/${tokenStorage}`
+            const movies = await apiInstanceExpress.get(url)
+            if (movies.status === 200) return movies.data
+        } catch (error) {
+            console.log(error)
+            return error
+        }
+    }
+
+    useEffect(() => {
+        if (emailStorage && tokenStorage) {
+            getFavMovies().then(result => setMovieList(result.data.favoriteMovies))
+        }
+    }, [emailStorage, tokenStorage])
 
     return (
         <BrowseLayout>
@@ -18,7 +40,7 @@ const Favorite = () => {
             </div>
             <div className='grid sm:grid-cols-4 grid-cols-2 gap-4 px-8 py-8'>
                 <EachUtils
-                    of={LIST_VIDEO_RECOMMENDATION}
+                    of={movieList}
                     render={(item, index) => (
                         <div
                             className='h-72'
@@ -38,6 +60,7 @@ const Favorite = () => {
                     )}
                 />
             </div>
+            <Modal />
         </BrowseLayout>
     )
 }
