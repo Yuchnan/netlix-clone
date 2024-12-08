@@ -2,16 +2,17 @@ import BrowseLayout from '@/components/Layouts/BrowseLayout'
 import React, { useEffect, useState } from 'react'
 import EachUtils from '@/utils/EachUtils'
 import MovieCard from '@mods/BrowsePage/MovieCard'
+import Modal from '@mods/BrowsePage/Modal'
 
 import { useAtom } from 'jotai'
-import { emailStorageAtom, idMovieAtom, tokenAtom } from '@/jotai/atoms'
+import { emailStorageAtom, idMovieAtom, isFavoritedAtom, tokenAtom } from '@/jotai/atoms'
 import { apiInstanceExpress } from '@/utils/apiInstance'
-import Modal from '@/components/modules/BrowsePage/Modal'
 
 const Favorite = () => {
     const [, setIdMovie] = useAtom(idMovieAtom)
     const [emailStorage] = useAtom(emailStorageAtom)
     const [tokenStorage] = useAtom(tokenAtom)
+    const [isFavorited] = useAtom(isFavoritedAtom)
 
     const [isHover, setIsHover] = useState(false)
     const [movieList, setMovieList] = useState([])
@@ -31,12 +32,13 @@ const Favorite = () => {
         if (emailStorage && tokenStorage) {
             getFavMovies().then(result => setMovieList(result.data.favoriteMovies))
         }
-    }, [emailStorage, tokenStorage])
+    }, [emailStorage, tokenStorage, isFavorited])
 
     return (
         <BrowseLayout>
             <div className='mt-20 px-8'>
                 <h3 className='text-white text-2xl font-bold'>My Favorite Movies</h3>
+                {movieList.length === 0 && <p className='mt-2 italic'>Anda belum mempunyai film favorite.</p>}
             </div>
             <div className='grid sm:grid-cols-4 grid-cols-2 gap-4 px-8 py-8'>
                 <EachUtils

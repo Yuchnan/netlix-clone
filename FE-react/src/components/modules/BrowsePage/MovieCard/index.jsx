@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'
 import Skeleton from './Skeleton'
 
-import { GoPlay, GoPlus, GoChevronDown } from 'react-icons/go'
+import { GoPlay, GoPlus, GoChevronDown, GoTrash } from 'react-icons/go'
 import { motion } from 'framer-motion'
 import { useAtom } from 'jotai'
-import { emailStorageAtom, idMovieAtom, isFetchingAtom, isOpenModalAtom, tokenAtom } from '@/jotai/atoms'
+import { emailStorageAtom, idMovieAtom, isFavoritedAtom, isFetchingAtom, isOpenModalAtom, tokenAtom } from '@/jotai/atoms'
 import { getVideoUrl } from '@/utils/getVideoUrl'
 import { useNavigate } from 'react-router-dom'
 import { apiInstanceExpress } from '@/utils/apiInstance'
 import { toast } from 'react-toastify'
+import { checkFavoriteMovies } from '@/utils/checkFavoriteMovies'
 
 const MovieCard = ({ data, isHover, setIsHover }) => {
     const navigate = useNavigate()
@@ -18,6 +19,7 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
     const [idMovie, setIdMovie] = useAtom(idMovieAtom)
     const [emailStorage] = useAtom(emailStorageAtom)
     const [tokenStorage] = useAtom(tokenAtom)
+    const [isFavorited, setIsFavorited] = useAtom(isFavoritedAtom)
 
     const [videoUrl, setVideoUrl] = useState(null)
     const [isFetching] = useAtom(isFetchingAtom)
@@ -25,22 +27,44 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
     if (isFetching) return <Skeleton />
 
     const handleAddFavMovie = async () => {
-        if (emailStorage && tokenStorage) {
-            try {
-                const addFavMovie = await apiInstanceExpress.post('my-movies', {
+        if (!emailStorage && tokenStorage) return
+        try {
+            const addFavMovie = await apiInstanceExpress.post('my-movies', {
+                email: emailStorage,
+                token: tokenStorage,
+                data: data
+            })
+            if (addFavMovie.status === 201) {
+                toast(`Berhasil menambahkan ${data.title} ke favorite`)
+                setIsFavorited(true)
+            } else {
+                toast(`Gagal menambahkan ${data.title} ke favorite`)
+            }
+        } catch (error) {
+            console.log(error)
+            toast(`Sorry,${error.message}`)
+        }
+    }
+
+    const handleRemoveFavMovie = async () => {
+        if (!emailStorage && !tokenStorage) return;
+        try {
+            const removeMovie = await apiInstanceExpress.delete('my-movies', {
+                data: {
                     email: emailStorage,
                     token: tokenStorage,
-                    data: data
-                })
-                if (addFavMovie.status === 201) {
-                    toast(`Berhasil menambahkan ${data.title} ke favorite`)
-                } else {
-                    toast(`Gagal menambahkan ${data.title} ke favorite`)
+                    movieID: data.id
                 }
-            } catch (error) {
-                console.log(error)
-                toast(`Sorry,${error.message}`)
+            })
+            if (removeMovie.status === 204) {
+                toast(`Berhasil menghapus ${data.title} dari favorite`)
+            } else {
+                toast(`Gagal menghapus ${data.title} dari favorite`)
             }
+            setIsFavorited(false)
+        } catch (error) {
+            console.log(error)
+            toast(`Sorry, ${error.message}`)
         }
     }
 
@@ -69,10 +93,10 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
                                     <GoPlay size={32} />
                                 </button>
                                 <button
-                                    onClick={handleAddFavMovie}
-                                    className='p-1 hover:text-white transition-all border rounded-full'
+                                    onClick={isFavorited ? handleRemoveFavMovie : handleAddFavMovie}
+                                    className='hover:text-white transition-all'
                                 >
-                                    <GoPlus size={20} />
+                                    {isFavorited ? <GoTrash size={32} /> : <GoPlus size={32} />}
                                 </button>
                             </div>
                             <div>
@@ -96,6 +120,7 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
                         setIsHover(true)
                         setIdMovie(data.id)
                         getVideoUrl({ movie_id: data.id }).then(result => setVideoUrl(result))
+                        checkFavoriteMovies({ emailStorage, tokenStorage, idMovie: data.id }).then(result => setIsFavorited(result))
                     }}
                     src={`${import.meta.env.VITE_BASE_URL_TMDB_IMAGE}${data.poster_path}`}
                     className='w-full max-h-48 cursor-pointer'
