@@ -4,8 +4,8 @@ import EachUtils from '@/utils/EachUtils'
 import { GoPlay } from 'react-icons/go'
 import { useAtom } from 'jotai'
 import { idMovieAtom, isOpenModalAtom } from '@/jotai/atoms'
-import { getMoviesRecommendation } from '@/utils/getMoviesRecommendation'
-import { getVideoUrl } from '@/utils/getVideoUrl'
+import { getMoviesRecommendation } from '@/utils/TMDB/getMoviesRecommendation'
+import { getVideoUrl } from '@/utils/TMDB/getVideoUrl'
 import { useNavigate } from 'react-router-dom'
 
 const Recommendation = () => {

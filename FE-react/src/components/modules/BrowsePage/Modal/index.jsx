@@ -7,7 +7,7 @@ import { useAtom } from 'jotai'
 import { MdClose } from "react-icons/md"
 import { GoPlay, GoPlusCircle } from 'react-icons/go'
 import { getMovieDetail } from '@/utils/TMDB/getMovieDetail'
-import { getVideoUrl } from '@/utils/getVideoUrl'
+import { getVideoUrl } from '@/utils/TMDB/getVideoUrl'
 import { useNavigate } from 'react-router-dom'
 
 const Modal = () => {

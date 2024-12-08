@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'
 
 import { GoPlay, GoMute, GoUnmute } from 'react-icons/go'
-import { getMoviesByType } from '@/utils/getMoviesByType'
+import { getMoviesByType } from '@/utils/TMDB/getMoviesByType'
 import { useAtom } from 'jotai'
 import { idMovieAtom, isOpenModalAtom } from '@/jotai/atoms'
-import { getVideoUrl } from '@/utils/getVideoUrl'
+import { getVideoUrl } from '@/utils/TMDB/getVideoUrl'
 import { useNavigate } from 'react-router-dom'
 
 const Jumbotron = () => {
@@ -19,7 +19,7 @@ const Jumbotron = () => {
     const [topMovies, setTopMovies] = useState([])
     const [videoUrl, setVideoUrl] = useState(null)
 
-    useEffect(() => { 
+    useEffect(() => {
         getMoviesByType({ moviesType: "top_rated" }).then(result => {
             setTopMovies(result[0])
             setIdMovie(result[0].id)

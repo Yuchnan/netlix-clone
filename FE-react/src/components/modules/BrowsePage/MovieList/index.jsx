@@ -5,7 +5,7 @@ import MovieCard from '../MovieCard'
 
 import { useAtom } from 'jotai'
 import { idMovieAtom, isFetchingAtom } from '@/jotai/atoms'
-import { getMoviesByType } from '@/utils/getMoviesByType'
+import { getMoviesByType } from '@/utils/TMDB/getMoviesByType'
 
 const MovieList = ({ title, moviesType }) => {
     const [, setIdMovie] = useAtom(idMovieAtom)
