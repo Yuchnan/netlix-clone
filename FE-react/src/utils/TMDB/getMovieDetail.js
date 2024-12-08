@@ -1,4 +1,4 @@
-import { apiInstance } from "./apiInstance"
+import { apiInstance } from "../apiInstance"
 
 export const getMovieDetail = async ({ movie_id }) => {
     try {

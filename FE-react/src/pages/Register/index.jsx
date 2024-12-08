@@ -7,7 +7,7 @@ import { GoChevronLeft } from 'react-icons/go'
 import { useNavigate } from 'react-router-dom'
 import { emailAtom } from '@/jotai/atoms'
 import { useAtom } from 'jotai'
-import { auth } from '@/utils/firebase'
+import { auth } from '@/utils/firebase/firebase'
 import { createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 import { ToastContainer, toast } from 'react-toastify';
 import { apiInstanceExpress } from '@/utils/apiInstance'

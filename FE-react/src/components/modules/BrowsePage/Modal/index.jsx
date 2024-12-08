@@ -6,7 +6,7 @@ import { idMovieAtom, isOpenModalAtom } from '@/jotai/atoms'
 import { useAtom } from 'jotai'
 import { MdClose } from "react-icons/md"
 import { GoPlay, GoPlusCircle } from 'react-icons/go'
-import { getMovieDetail } from '@/utils/getMovieDetail'
+import { getMovieDetail } from '@/utils/TMDB/getMovieDetail'
 import { getVideoUrl } from '@/utils/getVideoUrl'
 import { useNavigate } from 'react-router-dom'
 

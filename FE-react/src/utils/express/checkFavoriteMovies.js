@@ -1,4 +1,4 @@
-import { apiInstanceExpress } from "./apiInstance"
+import { apiInstanceExpress } from "../apiInstance"
 
 export const checkFavoriteMovies = async ({ emailStorage, tokenStorage, idMovie }) => {
     try {

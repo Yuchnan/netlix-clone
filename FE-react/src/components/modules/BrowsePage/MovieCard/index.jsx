@@ -10,7 +10,7 @@ import { getVideoUrl } from '@/utils/getVideoUrl'
 import { useNavigate } from 'react-router-dom'
 import { apiInstanceExpress } from '@/utils/apiInstance'
 import { toast } from 'react-toastify'
-import { checkFavoriteMovies } from '@/utils/checkFavoriteMovies'
+import { checkFavoriteMovies } from '@/utils/express/checkFavoriteMovies'
 
 const MovieCard = ({ data, isHover, setIsHover }) => {
     const navigate = useNavigate()

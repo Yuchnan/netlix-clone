@@ -3,7 +3,7 @@ import Navbar from '@/pages/Browse/Navbar'
 import Loading from '@mods/Elements/Loading'
 
 import { useAuthState } from "react-firebase-hooks/auth"
-import { auth } from '@/utils/firebase'
+import { auth } from '@/utils/firebase/firebase'
 import { emailStorageAtom, tokenAtom } from "@/jotai/atoms";
 import { useAtom } from "jotai";
 

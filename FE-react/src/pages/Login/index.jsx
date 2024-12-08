@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { emailAtom, emailStorageAtom, tokenAtom } from '@/jotai/atoms'
 import { useAtom } from 'jotai'
 import { signInWithEmailAndPassword, getIdToken } from 'firebase/auth'
-import { auth } from '@/utils/firebase'
+import { auth } from '@/utils/firebase/firebase'
 import { toast, ToastContainer } from 'react-toastify'
 import { apiInstanceExpress } from '@/utils/apiInstance'
 
