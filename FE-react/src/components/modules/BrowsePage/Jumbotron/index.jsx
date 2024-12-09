@@ -27,19 +27,20 @@ const Jumbotron = () => {
     }, [idMovie])
 
     return (
-        <div className='relative h-[60vw] w-full'>
+        <div className='relative h-[500px] w-full'>
             <ReactPlayer
                 url={"https://youtube.com/watch?v=" + videoUrl}
                 width={"100%"}
-                height={"100%"}
+                height={"700px"}
                 playing={true}
                 muted={isMute}
                 controls={false}
+                style={{ opacity: "75%" }}
             />
             <div className='absolute top-1/2 -translate-y-1/2 left-0 p-8 max-w-xl '>
                 <div className='flex flex-col gap-4 text-white'>
-                    <h1 className='text-5xl font-black'>{topMovies.title}</h1>
-                    <p>{topMovies.overview}</p>
+                    <h1 className='text-3xl sm:text-5xl font-black'>{topMovies.title}</h1>
+                    <p className='hidden lg:block'>{topMovies.overview}</p>
                 </div>
                 <div className='flex gap-4 mt-4'>
                     <button

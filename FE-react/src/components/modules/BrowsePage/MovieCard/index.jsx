@@ -12,7 +12,7 @@ import { apiInstanceExpress } from '@/utils/apiInstance'
 import { toast } from 'react-toastify'
 import { checkFavoriteMovies } from '@/utils/express/checkFavoriteMovies'
 
-const MovieCard = ({ data, isHover, setIsHover }) => {
+const MovieCard = ({ data, isHover, setIsHover, moviesType }) => {
     const navigate = useNavigate()
 
     const [, setIsOpenModal] = useAtom(isOpenModalAtom)
@@ -20,9 +20,10 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
     const [emailStorage] = useAtom(emailStorageAtom)
     const [tokenStorage] = useAtom(tokenAtom)
     const [isFavorited, setIsFavorited] = useAtom(isFavoritedAtom)
+    const [isFetching] = useAtom(isFetchingAtom)
 
     const [videoUrl, setVideoUrl] = useState(null)
-    const [isFetching] = useAtom(isFetchingAtom)
+    const [movieTypeState, setMovieTypeState] = useState(null)
 
     if (isFetching) return <Skeleton />
 
@@ -70,23 +71,25 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
 
     return (
         <>
-            {isHover && idMovie == data.id ? (
+            {isHover && idMovie == data.id && moviesType === movieTypeState ? (
                 <motion.div
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0, ease: "easeInOut" }}
                     className='relative shadow-md transition-all w-full'
                 >
-                    <ReactPlayer
-                        url={`https://youtube.com/watch?v=${videoUrl}`}
-                        playing={true}
-                        loop={true}
-                        muted={true}
-                        width={"100%"}
-                        height={"180px"}
-                        controls={false}
-                    />
-                    <div className='p-2 bg-[#141414] flex flex-col gap-1.5'>
+                    <div className='hover:scale-110 transition-all'>
+                        <ReactPlayer
+                            url={`https://youtube.com/watch?v=${videoUrl}`}
+                            playing={true}
+                            loop={true}
+                            muted={true}
+                            width={"100%"}
+                            height={"180px"}
+                            controls={false}
+                        />
+                    </div>
+                    <div className='p-4 bg-[#141414] flex flex-col gap-1.5 rounded-b-xl'>
                         <section className='mt-1 flex justify-between'>
                             <div className='flex gap-2'>
                                 <button onClick={() => navigate("/watch/" + videoUrl)}>
@@ -121,9 +124,10 @@ const MovieCard = ({ data, isHover, setIsHover }) => {
                         setIdMovie(data.id)
                         getVideoUrl({ movie_id: data.id }).then(result => setVideoUrl(result))
                         checkFavoriteMovies({ emailStorage, tokenStorage, idMovie: data.id }).then(result => setIsFavorited(result))
+                        setMovieTypeState(moviesType)
                     }}
                     src={`${import.meta.env.VITE_BASE_URL_TMDB_IMAGE}${data.poster_path}`}
-                    className='w-full max-h-48 cursor-pointer'
+                    className='w-full max-h-72 cursor-pointer object-cover rounded-xl'
                 />
 
             }

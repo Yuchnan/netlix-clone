@@ -37,13 +37,18 @@ const AccountMenu = () => {
                     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                 </div>
             </div>
-            <button
-                onClick={handleSignOut}
-                tabIndex={0}
-                className='dropdown-content top-10 w-32 bg-black py-1'
+            <div
+                className='dropdown-content absolute top-10 z-30 bg-black text-stone-200 py-2 flex flex-col gap-4 border border-stone-300/70 rounded-xl px-4'
             >
-                Sign Out
-            </button>
+                <p className='text-sm italic '>{email}</p>
+                <button
+                    onClick={handleSignOut}
+                    tabIndex={0}
+                    className='hover:text-white transition-all'
+                >
+                    Sign Out
+                </button>
+            </div>
         </div>
     )
 }

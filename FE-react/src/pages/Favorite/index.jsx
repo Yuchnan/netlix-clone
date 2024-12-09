@@ -40,7 +40,7 @@ const Favorite = () => {
                 <h3 className='text-white text-2xl font-bold'>My Favorite Movies</h3>
                 {movieList.length === 0 && <p className='mt-2 italic'>Anda belum mempunyai film favorite.</p>}
             </div>
-            <div className='grid sm:grid-cols-4 grid-cols-2 gap-4 px-8 py-8'>
+            <div className='grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl-grid-cols-8 gap-4 px-8 py-8'>
                 <EachUtils
                     of={movieList}
                     render={(item, index) => (

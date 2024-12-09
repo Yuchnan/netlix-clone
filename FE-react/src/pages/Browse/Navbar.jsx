@@ -11,13 +11,13 @@ const Navbar = () => {
 
     return (
         <header className='relative'>
-            <nav className='bg-[#141414] fixed text-white top-0 left-0 px-8 w-full z-10'>
+            <nav className='bg-[#141414] fixed text-white top-0 left-0 px-8 py-2 w-full z-10'>
                 <div className='flex justify-between items-center'>
                     <div className='flex items-center gap-4'>
-                        <img 
+                        <img
                             onClick={() => navigate("/browse")}
-                            src="/netflix-logo-icon.png" 
-                            className='w-[120px] ml-2 cursor-pointer hover:scale-105 transition-all' 
+                            src="/netflix-logo-icon.png"
+                            className='w-[120px] ml-2 cursor-pointer hover:scale-105 transition-all'
                         />
                         <ul className='sm:flex hidden items-center gap-4'>
                             <EachUtils

@@ -14,13 +14,13 @@ const CarouselLayout = ({ children }) => {
             <div className='flex justify-between absolute left-0 w-full h-full'>
                 <button
                     onClick={() => scroll(-500)}
-                    className='z-10 hover:bg-blue-900/50 text-white text-center opacity-75 transition all ease-in-out duration-300 h-48 w-10 mt-4'
+                    className='z-10 hover:bg-blue-900/50 text-white text-center opacity-75 transition all ease-in-out duration-300 h-72 w-10'
                 >
                     <GoChevronLeft size={32} />
                 </button>
                 <button
                     onClick={() => scroll(500)}
-                    className='z-10 hover:bg-blue-900/50 text-white text-center opacity-75 transition all ease-in-out duration-300 h-48 w-10 mt-4'
+                    className='z-10 hover:bg-blue-900/50 text-white text-center opacity-75 transition all ease-in-out duration-300 h-72 w-10'
                 >
                     <GoChevronRight size={32} />
                 </button>

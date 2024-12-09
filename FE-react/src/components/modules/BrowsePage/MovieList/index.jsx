@@ -27,14 +27,14 @@ const MovieList = ({ title, moviesType }) => {
     }, [moviesType])
 
     return (
-        <section className='px-8 py-4'>
+        <section className='px-8 py-4 relative'>
             <h3 className='text-white text-3xl font-semibold mb-2'>{title}</h3>
             <CarouselLayout>
                 <EachUtils
                     of={movieList}
                     render={(item, index) => (
                         <div
-                            className='h-72 w-1/4 carousel-item mt-4'
+                            className='w-1/2 md:w-1/4 lg:w-1/6 carousel-item px-1'
                             key={index}
 
                             onMouseLeave={() => {
@@ -46,6 +46,7 @@ const MovieList = ({ title, moviesType }) => {
                                 data={item}
                                 isHover={isHover}
                                 setIsHover={setIsHover}
+                                moviesType={moviesType}
                             />
                         </div>
                     )}
